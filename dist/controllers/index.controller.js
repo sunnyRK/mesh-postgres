@@ -58,32 +58,45 @@ exports.getUser = function (req, res) { return __awaiter(void 0, void 0, void 0,
     });
 }); };
 exports.getUserById = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, response;
+    var signature, response1, response2, userinfo, address;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                id = parseInt(req.params.id);
-                return [4 /*yield*/, database_1.client.query("SELECT * FROM user4 WHERE id = $1", [id])];
+                signature = parseInt(req.params.signature);
+                return [4 /*yield*/, database_1.client.query("SELECT * FROM user1 WHERE signature = $1", [signature])];
             case 1:
-                response = _a.sent();
-                return [2 /*return*/, res.json(response.rows)];
+                response1 = _a.sent();
+                return [4 /*yield*/, database_1.client.query("SELECT * FROM address WHERE sig_id = $1", [response1.rows[0].signature])];
+            case 2:
+                response2 = _a.sent();
+                console.log(response1.rows[0].signature);
+                userinfo = response1.rows;
+                userinfo[0].signature = response2.rows[0];
+                address = response2.rows[0];
+                return [2 /*return*/, res.json({
+                        userinfo: userinfo
+                    })];
         }
     });
 }); };
 exports.createUser = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, uname, email, response;
+    var _a, name, signature, address, response1, response2;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
                 console.log("111");
-                _a = req.body, uname = _a.uname, email = _a.email;
-                return [4 /*yield*/, database_1.client.query('INSERT INTO user4 (uname, email) VALUES ($1, $2)', [uname, email])];
+                _a = req.body, name = _a.name, signature = _a.signature, address = _a.address;
+                return [4 /*yield*/, database_1.client.query('INSERT INTO user1 (name, signature) VALUES ($1, $2)', [name, signature])];
             case 1:
-                response = _b.sent();
+                response1 = _b.sent();
+                return [4 /*yield*/, database_1.client.query('INSERT INTO address (sig_id, street) VALUES ($1, $2)', [signature, address.street])];
+            case 2:
+                response2 = _b.sent();
+                // console.log(response1)
                 res.json({
                     message: 'User Added successfully',
                     body: {
-                        user: { uname: uname, email: email }
+                        user: { name: name, signature: signature, address: address }
                     }
                 });
                 return [2 /*return*/];
@@ -101,7 +114,7 @@ exports.updateUser = function (req, res) { return __awaiter(void 0, void 0, void
                 console.log(id);
                 console.log(uname);
                 console.log(email);
-                return [4 /*yield*/, database_1.client.query('UPDATE user4 SET uname = $1, email = $2 WHERE id = $3', [uname, email, id])];
+                return [4 /*yield*/, database_1.client.query('UPDATE user1 SET uname = $1, email = $2 WHERE id = $3', [uname, email, id])];
             case 1:
                 response = _b.sent();
                 res.json({
@@ -120,7 +133,7 @@ exports.deleteUser = function (req, res) { return __awaiter(void 0, void 0, void
         switch (_a.label) {
             case 0:
                 id = parseInt(req.params.id);
-                return [4 /*yield*/, database_1.client.query('DELETE FROM user4 where id = $1', [
+                return [4 /*yield*/, database_1.client.query('DELETE FROM user1 where id = $1', [
                         id
                     ])];
             case 1:

@@ -4,7 +4,7 @@ var express_1 = require("express");
 var router = express_1.Router();
 var index_controller_1 = require("../controllers/index.controller");
 router.get('/user', index_controller_1.getUser);
-router.get('/user/:id', index_controller_1.getUserById);
+router.get('/user/:signature', index_controller_1.getUserById);
 router.post('/user', index_controller_1.createUser);
 router.put('/user/:id', index_controller_1.updateUser);
 router.delete('/user/:id', index_controller_1.deleteUser);
